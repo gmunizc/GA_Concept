@@ -5,15 +5,14 @@
 
 //Constant Declarations:
 #define POP_SIZE 10
-#define CHARMAP "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%%^&*(_-)+=[]{}<>|\\;:'\",./?~` "
 
 //Function declarations:
 void initialization();
 void fitnessCalculation();
 void selection();
 void mutation();
-int isDone();
 
+int isDone();
 void printPopulation();
 char randchar();
 
@@ -29,20 +28,22 @@ int main()
 	srand((unsigned int)time(NULL));
 	initialization();
 
+	fitnessCalculation();
+
+//	while(fitnessCalculation())
 	while(!isDone())
 	{
-		fitnessCalculation();
 		selection();
-		mutation();		
+		mutation();
 	}
 
-	fitnessCalculation();
 	printPopulation();
 	
 	return 0;
 }
 
-//GA Steps - Functions:
+//	======================= GA Steps =======================//
+
 void initialization()
 {
 	int i = 0;
@@ -58,6 +59,7 @@ void initialization()
 	}
 }
 
+//The lesser the better. 0 is the optimal value:
 void fitnessCalculation()
 {
 	int i = POP_SIZE-1;
@@ -76,9 +78,11 @@ void selection(){}
 
 void mutation(){}
 
-int isDone(){return 1;}
+// ========================================================//
 
 // Helper Functions:
+int isDone(){return 1;}
+
 void printPopulation()
 {
 	for(int i = 0; i < POP_SIZE; i++)
