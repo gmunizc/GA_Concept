@@ -1,13 +1,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
 
 //Constant Declarations:
 #define POP_SIZE 10
-#define CHARMAP "abcdefghijklmnopqrstuvwxyz"\
-		"ABCDEFGHIJKLMNOPQRSTUVWXYZ"\
-		"0123456789"\
-		"!@#$%%^&*(_-)+=[]{}<>|\\;:'\",./?~` "
+#define CHARMAP "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%%^&*(_-)+=[]{}<>|\\;:'\",./?~` "
 
 //Function declarations:
 void initialization();
@@ -17,14 +15,17 @@ void mutation();
 int isDone();
 
 void printPopulation();
+char randchar();
 
 //Global Variables:
 char *target = "Hello World";
 char *population[POP_SIZE];
+char *charmap = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*(_-)+=[]{}<>|;:',./?~` ";
 
 int main()
 {
-
+	//Initializing population:
+	srand((unsigned int)time(NULL));
 	initialization();
 
 	while(!isDone())
@@ -36,19 +37,22 @@ int main()
 	}
 
 	printPopulation();
-
+	
 	return 0;
 }
 
 //GA Steps - Functions:
-
 void initialization()
 {
 	int i = 0;
 	while(i < POP_SIZE)
 	{
 		population[i] = malloc(sizeof(target));
-		population[i][strlen(target)-1] = '\0';
+		for(int j = 0; j < strlen(target); j++)
+		{
+			population[i][j] = randchar();
+		}
+		population[i][strlen(target)] = '\0';
 		i++;
 	}
 }
@@ -68,10 +72,12 @@ void printPopulation()
 	{
 		printf("%s\n",population[i]);
 	}
+	printf("%s\n",target);
 }
-/*
-char rndchr(char* map)
+
+char randchar()
 {
-	return *(map+RANDBETWEEN(0, strlen(map)));
+
+	return charmap[rand()%(int)(strlen(charmap)-1)];
 }
-*/
+
