@@ -4,17 +4,18 @@
 #include <time.h>
 
 //Constant Declarations:
-#define POP_SIZE 10
+#define POP_SIZE 8192
 
 //Function declarations:
 void initialization();
 void fitnessCalculation();
-void selection();
-void mutation();
+void crossover();
+void mutation(char *mutant, int n);
 
 int isDone();
 void printPopulation();
-char randchar();
+char randChar();
+int randNumb(int n);
 
 //Global Variables:
 char *target = "Hello World";
@@ -23,6 +24,8 @@ char *charmap = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!
 int fitness[POP_SIZE];
 int best = 500;
 int fit = 0;
+int distance = 50;
+int mutChance = 10;
 
 int main()
 {
@@ -32,15 +35,17 @@ int main()
 
 	fitnessCalculation();
 
-//	while(best)
-	while(!isDone())
+//	while(!isDone())
+	while(best)
 	{
-		selection();
-		mutation();
+		crossover();
+		fitnessCalculation();
+		printf("Best:%s - %d\n",population[fit], best);
+		printf("dist: %d | mut: %d\n",distance,mutChance);
+		//printPopulation();
 	}
-
 	printPopulation();
-	
+
 	return 0;
 }
 
@@ -54,7 +59,7 @@ void initialization()
 		population[i] = malloc(sizeof(target));
 		for(int j = 0; j < strlen(target); j++)
 		{
-			population[i][j] = randchar();
+			population[i][j] = randChar();
 		}
 		population[i][strlen(target)] = '\0';
 		i++;
@@ -81,9 +86,73 @@ void fitnessCalculation()
 	}
 }
 
-void selection(){}
+void crossover()
+{	
+//	mutation(population[fit],1);			
 
-void mutation(){}
+	int j = 0;
+	char *newBorn = population[0];
+	for(int i = 0; i < strlen(target); i++)
+	{
+		//printf("i: %d\n",i);
+		while(1)
+		{
+			//printf("j: %d\n",j);
+			if(j >= POP_SIZE)
+			{
+				j = 0;
+			}
+			if(fitness[j] <= best + distance)
+			{
+				//mutation(population[j],randNumb(1));
+				newBorn = population[j];
+				j++;
+				break;
+			}
+			else
+			{
+				//newBorn = population[j];
+				for(int n = 0; n < strlen(target)/5; n++)
+				{
+					population[j][randNumb(strlen(target))] = newBorn[randNumb(strlen(target))];
+				}
+				mutation(population[j],randNumb(strlen(target)/2));
+			}
+			j++;
+		}
+	}
+	if(distance > 0)
+	{
+		distance --;
+	}
+	if(distance == 0)
+	{
+		distance = 100;
+	}
+/*	if(distance < 0)
+	{
+		distance = 5;
+	}
+*/
+}
+
+void mutation(char *mutant, int n)
+{
+	for(int k = 0; k < n; k++)
+	{
+		mutant[randNumb(strlen(target))] = randChar();
+	}
+
+	
+	if(best < 15)
+	{
+		mutChance = 6;
+	}
+	if(mutChance > 3)
+	{
+		mutChance--;
+	}
+}
 
 // ========================================================//
 
@@ -100,9 +169,14 @@ void printPopulation()
 	printf("Best: %s - %d\n",population[fit],best);
 }
 
-char randchar()
+char randChar()
 {
 
-	return charmap[rand()%(int)(strlen(charmap)-1)];
+	return charmap[randNumb(strlen(charmap)-1)];
+}
+
+int randNumb(int n)
+{
+	return (rand()%(int)(n));
 }
 
