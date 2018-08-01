@@ -21,6 +21,8 @@ char *target = "Hello World";
 char *population[POP_SIZE];
 char *charmap = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*(_-)+=[]{}<>|;:',./?~` ";
 int fitness[POP_SIZE];
+int best = 500;
+int fit = 0;
 
 int main()
 {
@@ -30,7 +32,7 @@ int main()
 
 	fitnessCalculation();
 
-//	while(fitnessCalculation())
+//	while(best)
 	while(!isDone())
 	{
 		selection();
@@ -70,6 +72,11 @@ void fitnessCalculation()
 		for (j = (int)sizeof(target)-1; j >= 0; j--) {
 			fitness[i] += abs(target[j]-population[i][j]);
 		}
+		if(fitness[i] < best)
+		{
+			best = fitness[i];
+			fit = i;
+		}
 		i--;
 	}
 }
@@ -89,7 +96,8 @@ void printPopulation()
 	{
 		printf("P: %s F: %d\n",population[i],fitness[i]);
 	}
-	printf("%s\n",target);
+	printf("Target: %s\n",target);
+	printf("Best: %s - %d\n",population[fit],best);
 }
 
 char randchar()
