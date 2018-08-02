@@ -4,7 +4,7 @@
 #include <time.h>
 
 //Constant Declarations:
-#define POP_SIZE 8192
+#define POP_SIZE 10
 
 //Function declarations:
 void initialization();
@@ -18,7 +18,7 @@ char randChar();
 int randNumb(int n);
 
 //Global Variables:
-char *target = "Hello World";
+char *target = "Hello";
 char *population[POP_SIZE];
 char *charmap = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*(_-)+=[]{}<>|;:',./?~` ";
 int fitness[POP_SIZE];
@@ -35,6 +35,7 @@ int main()
 
 	fitnessCalculation();
 
+	printPopulation();
 //	while(!isDone())
 	while(best)
 	{
@@ -42,7 +43,7 @@ int main()
 		fitnessCalculation();
 		printf("Best:%s - %d\n",population[fit], best);
 		printf("dist: %d | mut: %d\n",distance,mutChance);
-		//printPopulation();
+		printPopulation();
 	}
 	printPopulation();
 
@@ -89,23 +90,26 @@ void fitnessCalculation()
 void crossover()
 {	
 //	mutation(population[fit],1);			
+//int scanf5;
 
 	int j = 0;
-	char *newBorn = population[0];
-	for(int i = 0; i < strlen(target); i++)
+	char *newBorn = population[fit];
+	for(int i = 0; i < POP_SIZE; i++)
 	{
 		//printf("i: %d\n",i);
 		while(1)
-		{
+		{	//scanf("%d",&scanf5);
 			//printf("j: %d\n",j);
 			if(j >= POP_SIZE)
 			{
 				j = 0;
 			}
-			if(fitness[j] <= best + distance)
+			if(fitness[j] <= best)
 			{
-				//mutation(population[j],randNumb(1));
+				
 				newBorn = population[j];
+				mutation(population[j],randNumb(1));
+				fitnessCalculation();
 				j++;
 				break;
 			}
@@ -127,7 +131,7 @@ void crossover()
 	}
 	if(distance == 0)
 	{
-		distance = 100;
+		distance = 50;
 	}
 /*	if(distance < 0)
 	{
