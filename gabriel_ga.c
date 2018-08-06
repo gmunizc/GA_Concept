@@ -9,7 +9,7 @@
 //Function declarations:
 void initialization();
 void fitnessCalculation();
-void crossover();
+void evolution();
 void mutation(char *mutant, int n);
 
 int isDone();
@@ -24,8 +24,8 @@ char *charmap = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!
 int fitness[POP_SIZE];
 int best = 500;
 int fit = 0;
-int distance = 50;
-int mutChance = 10;
+//int distance = 50;
+//int mutChance = 10;
 
 int main()
 {
@@ -36,13 +36,12 @@ int main()
 	fitnessCalculation();
 
 	printPopulation();
-//	while(!isDone())
 	while(best)
 	{
-		crossover();
+		evolution();
 		fitnessCalculation();
 		printf("Best:%s - %d\n",population[fit], best);
-		printf("dist: %d | mut: %d\n",distance,mutChance);
+		//printf("dist: %d | mut: %d\n",distance,mutChance);
 		printPopulation();
 	}
 	printPopulation();
@@ -87,57 +86,53 @@ void fitnessCalculation()
 	}
 }
 
-void crossover()
-{	
-//	mutation(population[fit],1);			
-//int scanf5;
+void evolution()
+{
 
 	int j = 0;
 	char *newBorn = population[fit];
+	int luck;
 	for(int i = 0; i < POP_SIZE; i++)
 	{
-		//printf("i: %d\n",i);
 		while(1)
-		{	//scanf("%d",&scanf5);
-			//printf("j: %d\n",j);
+		{
 			if(j >= POP_SIZE)
 			{
 				j = 0;
 			}
+			//Selection:
 			if(fitness[j] <= best)
 			{
 				
 				newBorn = population[j];
-				mutation(population[j],randNumb(1));
+				luck = randNumb(POP_SIZE);
+				//Mutation:
+				if(luck != j)
+				{
+					mutation(population[luck],randNumb(3));
+				}
 				fitnessCalculation();
 				j++;
 				break;
 			}
+			//Crossover:
 			else
 			{
-				//newBorn = population[j];
 				for(int n = 0; n < strlen(target)/5; n++)
 				{
 					population[j][randNumb(strlen(target))] = newBorn[randNumb(strlen(target))];
 				}
+				//Mutation:
 				mutation(population[j],randNumb(strlen(target)/2));
+			}
+			//Mutation:
+			if(randNumb(3))
+			{
+				mutation(population[j],randNumb(2));
 			}
 			j++;
 		}
 	}
-	if(distance > 0)
-	{
-		distance --;
-	}
-	if(distance == 0)
-	{
-		distance = 50;
-	}
-/*	if(distance < 0)
-	{
-		distance = 5;
-	}
-*/
 }
 
 void mutation(char *mutant, int n)
@@ -145,16 +140,6 @@ void mutation(char *mutant, int n)
 	for(int k = 0; k < n; k++)
 	{
 		mutant[randNumb(strlen(target))] = randChar();
-	}
-
-	
-	if(best < 15)
-	{
-		mutChance = 6;
-	}
-	if(mutChance > 3)
-	{
-		mutChance--;
 	}
 }
 
