@@ -105,12 +105,15 @@ void evolution()
 			{
 				
 				newBorn = population[j];
-				luck = randNumb(POP_SIZE);
+				
 				//Mutation:
+				luck = randNumb(POP_SIZE);
 				if(luck != j)
 				{
 					mutation(population[luck],randNumb(3));
 				}
+
+
 				fitnessCalculation();
 				j++;
 				break;
@@ -122,13 +125,6 @@ void evolution()
 				{
 					population[j][randNumb(strlen(target))] = newBorn[randNumb(strlen(target))];
 				}
-				//Mutation:
-				mutation(population[j],randNumb(strlen(target)/2));
-			}
-			//Mutation:
-			if(randNumb(3))
-			{
-				mutation(population[j],randNumb(2));
 			}
 			j++;
 		}
