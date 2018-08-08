@@ -4,7 +4,9 @@
 #include <time.h>
 
 //Constant Declarations:
-#define POP_SIZE 10
+#define POP_SIZE 8
+#define CHANCE 3
+#define PERCENT_CROSS 0.2
 
 //Function declarations:
 void initialization();
@@ -18,14 +20,12 @@ char randChar();
 int randNumb(int n);
 
 //Global Variables:
-char *target = "Hello";
+char *target = "Hello!";
 char *population[POP_SIZE];
 char *charmap = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*(_-)+=[]{}<>|;:',./?~` ";
 int fitness[POP_SIZE];
 int best = 500;
 int fit = 0;
-//int distance = 50;
-//int mutChance = 10;
 
 int main()
 {
@@ -34,22 +34,19 @@ int main()
 	initialization();
 
 	fitnessCalculation();
-
 	printPopulation();
+
 	while(best)
 	{
 		evolution();
 		fitnessCalculation();
-		printf("Best:%s - %d\n",population[fit], best);
-		//printf("dist: %d | mut: %d\n",distance,mutChance);
 		printPopulation();
 	}
-	printPopulation();
 
 	return 0;
 }
 
-//	======================= GA Steps =======================//
+//	================================================ GA Functions ===============================================	//
 
 void initialization()
 {
@@ -91,7 +88,7 @@ void evolution()
 
 	int j = 0;
 	char *newBorn = population[fit];
-	int luck;
+	int lucky;
 	for(int i = 0; i < POP_SIZE; i++)
 	{
 		while(1)
@@ -103,14 +100,13 @@ void evolution()
 			//Selection:
 			if(fitness[j] <= best)
 			{
-				
 				newBorn = population[j];
 				
 				//Mutation:
-				luck = randNumb(POP_SIZE);
-				if(luck != j)
+				lucky = randNumb(POP_SIZE);
+				if(lucky != j)
 				{
-					mutation(population[luck],randNumb(3));
+					mutation(population[lucky],randNumb(CHANCE));
 				}
 
 
@@ -121,7 +117,7 @@ void evolution()
 			//Crossover:
 			else
 			{
-				for(int n = 0; n < strlen(target)/5; n++)
+				for(int n = 0; n < strlen(target)*PERCENT_CROSS; n++)
 				{
 					population[j][randNumb(strlen(target))] = newBorn[randNumb(strlen(target))];
 				}
@@ -139,10 +135,10 @@ void mutation(char *mutant, int n)
 	}
 }
 
-// ========================================================//
+//	================================================ End GA Steps ===============================================	//
 
-// Helper Functions:
-int isDone(){return 1;}
+
+//	Helper Functions:
 
 void printPopulation()
 {
